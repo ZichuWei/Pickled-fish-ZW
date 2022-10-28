@@ -12,3 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Provide the link about my GitHub Repo 
 
 [My GitHub Repository](https://github.com/ZichuWei/Pickled-fish-ZW)
+
+## Statistical Analysis and Interpretation
+
+```{r}
+# library the packages what we need to use for data analysis:
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(plotrix)
+```
