@@ -378,4 +378,26 @@ ggplot(data_lnRR, aes(y = yi, x = year_online, size = 1/sqrt(vi))) + geom_point(
 ```
 
 
+### 9. Formal meta-regression model with year:
+
+Formal meta-regression model that includes year as a moderator (fixed effect) to test for time-lag bias.
+
+```{r}
+# Including year as moderator:
+# Year online means year the final paper was made available online, which always the same or earlier than year print, so we can use 'year_online'.
+metareg_time <- rma.mv(yi ~ year_online, vi, random = list(~1 | study, ~1 | residual),
+    test = "t", dfs = "contain", data = data_lnRR)
+summary(metareg_time)
+```
+
+```{r}
+# Explore how much variation does time when results were published:
+r2_time <- orchaRd::r2_ml(metareg_time)
+r2_time
+```
+
+```{r}
+# Time-lag explains 2.5% of the variation in lnRR (yi). This is the evidence of a time-lag bias.
+```
+
 
