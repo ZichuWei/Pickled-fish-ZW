@@ -51,7 +51,26 @@ paper <- read.csv("clark_paper_data.csv")
 meta <- read.csv("ocean_meta_data.csv")
 ```
 
+### Process and clean the original data:
 
+```{r}
+# Drop irrelevant columns 'loc' and 'comment':
+data_clean <- subset(data,select = -c(loc, comment))
+# Remove the missing data, which reflected by 'NA';
+# Remove the incorrect data: some data cannot less than 0, so use filter to check and correct the data.
+data_eff <- data_clean %>% filter(!is.na(activity)) %>% filter(animal_id > 0, activity > 0)
+data_eff
+```
+
+```{r}
+# Check spelling in species and treatment:
+data_eff$species %>% unique()
+data_eff$treatment %>% unique()
+```
+
+```{r}
+# Because we find that there are six species and two treatments which are all correct, so we don't need to change or remove some data.
+```
 
 
 
