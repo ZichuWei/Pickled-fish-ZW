@@ -442,4 +442,52 @@ summary(metareg_time_c)
 ```
 
 
+```{r}
+# The overall mean correlation (r) when small sample and time-lag biases are controlled for is -0.1653.
+```
+
+
+
+### 11. The potential for publication bias:
+
+A written paragraph that discusses the potential for publication bias based on the meta-regression results. What type of publication bias, if any, appears to be present in the data? If publication bias is present, what does it mean and what might be contributing to such bias?
+
+```{r}
+# The defination of publication bias:
+# A publication bias, also known as a ﬁle drawer problem, is a situation in which many articles are kept in a drawer and not published, but are actually just as important as the published article. It also means a bias caused by the fact that published research is not sufficiently representative of the study population. And publication bias occurs when the decision to publish a study is influenced by the study's conclusions. Publication bias has a profound negative impact on literature analysis and meta-analysis because published papers may thus focus on supporting or rejecting relevant conclusions.
+
+
+# Type: 
+# Funnel plot is the most common method to identify publication bias in the process of meta-analysis. In the case of no bias, points in the image should be clustered into an inverted funnel shape. If there is bias, the appearance of the funnel plot is asymmetric, and the bottom corner of the graph is blank. So according to the funnel plot analyzed above, we find a clear blank area in the lower right corner, showing a bunch of missing effect sizes. The positive correlation is based on very small sample sizes, which are usually medium to small without publication. The inverse association of large sample size/high precision study was not significant.
+# Moreover, by calculating the data, we find that the overall mean correlation (r) when small sample and time-lag heurisms are controlled for is-0.1653 are negatively correlated, So we speculate that there is a negative outcome bias.
+
+
+# Mean:
+# If there is a publication bias, it means that the published research is not representative of the study population, which leads to a bias. In this study, we speculate about negative results bias, where authors are more likely to submit or edit, or more likely to accept negative results over positive or inconclusive results.
+
+
+# The reason:
+# 1. Sampling bias: Due to many limitations, it is difficult for researchers to obtain all samples applicable to the research question when discussing a certain issue. Random sampling is usually used to make the sample as representative as possible of the study population, so the relevant conclusions drawn from these samples may not be representative. Therefore, after these studies are included in the meta-analysis, the results of the data analysis are bound to be correspondingly biased.
+# 2. Preference for salient results: In the field of academic research, usually only papers with significant research conclusions can be accepted and published by journals, which leads to researchers' preference for salient results. Even if researchers acknowledge the contribution of insignificant conclusions, the contribution of insignificant conclusions will often be questioned more, and some new academic ethical problems may arise. Therefore, after these studies are included in the meta-analysis, the results of the data analysis are bound to be correspondingly biased.
+# 3. Incomplete literature search: If meta-analysis researchers do not comprehensive literature search on a research question, publication bias may also result. Due to the limitations of practical conditions, such as language limitations, meta-analysis researchers usually can only retrieve a limited number of literatures for a research question. What meta-analysis researchers can do is to retrieve as many articles as possible (e.g. through multiple retrieval channels, etc.) to reduce publication bias.
+```
+
+
+### 12. Identify studies contributing to publication bias
+
+Identify any studies contributing to publication bias. How do your updated meta-analysis results compare with a meta-analysis by Clement et. al. (2022)? Are there any concerns about these studies? If so, describe using references to existing papers what concerns have been raised?
+
+```{r}
+# Our study shows that, based on published data on ocean acidification on fish behavior in recent years, the overall bias is to the left, with a downward impact, according to a funnel plot we drew. Moreover, the overall mean correlation (r) when small sample and time-lag heurisms are controlled for is-0.1653 are ͒ correlated, So we speculate that there is a negative outcome bias.
+
+# Based on a systematic literature review and meta-analysis, Clement et al. found evidence of a declining impact of ocean acidification studies on fish behavior compared to other literature. Typically, the magnitude of the effect in this field (absolute lnRR) has declined by an order of magnitude over the past decade.
+
+# This downward effect can be explained by a number of factors, indicating that studies of ocean acidification on fish behavior exhibit a downward effect that cannot be explained by 3 biological processes that are generally considered important drivers of acidification effects. There may be three potential biases: (1) method bias; (2) selective publication bias; (3) citation bias. Then, explore the potential influence of the authors/researchers in driving the decline effect.
+
+# The results suggest that the large impact of ocean acidification on fish behavior is at least partly due to methodological factors in earlier studies (for example, small sample sizes). In addition, the selective publication of large effect sizes by authors and journals, especially at the beginning of the field, and the continued high frequency of citations of these papers may contribute to the proliferation and persistence of this idea. However, it is important to note that the low sample size and selective publication cannot fully explain the strong downward effect detected here, and other biases and processes may be at play.
+
+# Publication bias appears to be a pervasive problem in the scientific literature and has been demonstrated in many areas of research. But the use of single studies and aspects of the design and execution of meta-analyses may increase the likelihood of such bias, and their occurrence may significantly skew any attempt to derive valid estimates by pooling data from a group of studies, bias the results toward positive outcomes. Although various methods have been proposed to determine whether publication bias exists or even correct it, they all have their limitations.
+
+# So the best option may be to prevent it from happening in the first place, either by registering the existence of every trial or by publishing all studies, regardless of the results. Before overcoming the issue of publication bias, all reviewers and readers should be aware that they may be looking at a biased sample of experimental results and should adjust the strength of their conclusions accordingly. This is particularly true when studying weak associations using a meta-analysis approach, where the calculation of the overall estimate has endowed the review with an accuracy that may not always be warranted.
+```
 
