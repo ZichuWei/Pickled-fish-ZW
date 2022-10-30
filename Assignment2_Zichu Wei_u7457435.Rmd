@@ -132,6 +132,17 @@ summary(data_4)
 
 
 
+### 4. Calculate lnRR effect size:
+
+Correctly calculate the log response ratio (lnRR) effect size for every row of the dataframe using metafor’s 'escalc()' function
+
+```{r}
+# Avoid NA values, we choose the value greater than 0:
+data_complete <- data_4 %>% filter(ctrl_mean>0,ctrl_n>0,ctrl_sd>0,oa_n>0,oa_mean>0,oa_sd>0)
+data_lnRR <- escalc(measure="ROM", m1i=ctrl_mean, m2i=oa_mean, sd1i=ctrl_sd, sd2i=oa_sd, n1i=ctrl_n, n2i=oa_n,data=data_complete)
+str(data_lnRR)
+# 'yi' means the value of 'lnRR' effect size.
+```
 
 
 
