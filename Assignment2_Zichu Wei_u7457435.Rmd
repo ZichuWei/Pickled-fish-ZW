@@ -73,4 +73,37 @@ data_eff$treatment %>% unique()
 ```
 
 
+### 1. Summary statistics:
+
+```{r}
+# Because the following analyses need to analyze different treatment, so use 'filter' to separate the treatment:
+data_ctrl <- data_eff %>% filter(treatment=="control")
+data_oa <- data_eff %>% filter(treatment=="CO2")
+```
+
+#### Gnerate the summary staistics for different levels:
+
+Use 'group_by' and 'summarize' to generate the summary statistics (means, SD, N) for each fish species' average activity for each treatment.
+
+```{r}
+# Control: According to the column name in the 'meta-data_ocean_meta.csv' file, set the column as 'ctrl.mean', 'ctrl.sd', 'ctrl.n':
+data1 <- data_ctrl %>% group_by(species) %>% summarize(ctrl.mean = mean(activity), ctrl.sd = sd(activity), ctrl.n = length(species))
+data1
+```
+
+```{r}
+# CO2: According to the column name in the 'meta-data_ocean_meta.csv' file, set the column as 'oa.mean', 'oa.sd', 'oa.n':
+data2 <- data_oa %>% group_by(species) %>% summarize(oa.mean = mean(activity), oa.sd = sd(activity), oa.n = length(species))
+data2
+```
+
+```{r}
+# Merge the summary statistics for the following processing:
+data_1 <- merge(data1,data2)
+data_1
+```
+
+
+
+
 
