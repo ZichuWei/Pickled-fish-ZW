@@ -145,4 +145,31 @@ str(data_lnRR)
 ```
 
 
+### 5. Controls for the sampling variance of lnRR:
+
+Correct meta-analytic model fitted to the data that controls for the sampling variance of lnRR. The model should include a random effect of study and observation. Use metafor’s 'rma.mv()' function.
+
+```{r}
+# Random effect analysis:
+data_v1 <- rma.mv(yi, vi, test = "t", dfs = "contain", data = data_lnRR)
+summary(data_v1)
+```
+
+```{r}
+# Multiple-level meta-analytic model:
+# Estimate a random effect variance for between study (i.e., study) and within-study (i.e., residual) grouping variables to control for non-independence and understand sources driving effect size variability.
+data_v <- metafor::rma.mv(yi, vi, 
+                   method="REML",
+                   random=list(~1|study,
+                               ~1|residual), 
+                   dfs = "contain",
+                   test="t",
+                   data=data_lnRR)
+summary(data_v)
+```
+
+```{r}
+# The explanation of the above code is below.
+```
+
 
