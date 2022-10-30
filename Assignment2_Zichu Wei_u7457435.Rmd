@@ -116,6 +116,21 @@ data_2 <- merge(paper,data_1)
 data_2
 ```
 
+#### 3. Metadata in 'ocean_meta_data.csv' file:
+
+Merge the combined summary statistics 'data_1' and metadata from Clark et al. 'paper' (output 'data_2') into the larger meta-analysis dataset 'ocean_meta_data.csv' file:
+
+```{r}
+# Use 'rbind()' function to merge 'data_2' with 'meta':
+# We can find that 'meta' and 'data_2' have different colnames, and both have very informal colnames, so we can use 'janitor::clean_names()' to polish them:
+data_3 <- rbind(meta %>% janitor::clean_names(),data_2 %>% janitor::clean_names())
+data_3$residual <- 1:dim(data_3)[1]
+# We find 'oa_mean' and 'oa_sd' both have some NA values, in order to help the following analysis, then we first remove them.
+data_4 <- data_3 %>% filter(!is.na(oa_mean)) %>% filter(!is.na(oa_sd))
+summary(data_4)
+```
+
+
 
 
 
