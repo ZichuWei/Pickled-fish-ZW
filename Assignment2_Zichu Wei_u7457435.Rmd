@@ -254,5 +254,99 @@ orchaRd::orchard_plot(data_v, mod = "1", group = "study", data = data_lnRR,
 ```
 
 
+### 7. Funnel plot:
+
+Funnel plot for visually assessing the possibility of publication bias.
+
+#### 'funnel' method:
+
+```{r}
+# Use 'fuunel()' function to draw funnel plot:
+metafor::funnel(x = data_lnRR$yi, vi = data_lnRR$vi,yaxis = "seinv",
+    digits = 2, level = c(0.1, 0.05, 0.01), shade = c("white", "gray55", "gray 75"),
+    las = 1, xlab = "Correlation Coefficient (r)", atransf = tanh, legend = TRUE)
+# Because we find there are some very high values, so we need to remove them:
+# Because the we need the data about '1/sqrt(vi)',so there is a negative correlation, so we need to remove some lowest values.
+# First method: Try to remove the values to see if you can get a graph that is easy to observe.
+data_lnRRr <- subset(data_lnRR, vi!=min(data_lnRR$vi))
+data_lnRRc <- subset(data_lnRRr, vi!=min(data_lnRRr$vi))
+data_lnRRd <- subset(data_lnRRc, vi!=min(data_lnRRc$vi))
+data_lnRRe <- subset(data_lnRRd, vi!=min(data_lnRRd$vi))
+data_lnRRf <- subset(data_lnRRe, vi!=min(data_lnRRe$vi))
+```
+
+```{r  funnel, echo=TRUE, fig.align='center', fig.cap= "Funnel plot depicting the correlation between metabolism and fitness as a function of precision (1 / SE). The dotted lines are the theoretical 95% sampling variance intervals - the interval with which we expect effect size estimates to fall within if only sampling variance drives differences in effects. Shaded regions represent the p-value of studies. The white region indicates studies where the p-value is between 0.1 and 1; dark gray where the p-value of studies is between 0.05 and 0.1 and the lighter gray regions where the p-value of studies is significant." }
+# Check and recreate the figure:
+metafor::funnel(x = data_lnRRf$yi, vi = data_lnRRf$vi, yaxis = "seinv",
+    digits = 3, level = c(0.1, 0.05, 0.01), shade = c("white", "gray55", "gray 75"),
+    xlab = "Correlation Coefficient (r)", xlim=c(-5,5),atransf = tanh, legend = TRUE, main = "Funnel plot")
+
+# Narrow down the X-axis, enlarge the image to help you see it:
+metafor::funnel(x = data_lnRRf$yi, vi = data_lnRRf$vi, yaxis = "seinv",
+    digits = 3, level = c(0.1, 0.05, 0.01), shade = c("white", "gray55", "gray 75"), col="orange",
+    xlab = "Correlation Coefficient (r)", xlim=c(-1,1), atransf = tanh, legend = TRUE, main = "Funnel plot")
+```
+
+```{r  funnel, echo=TRUE, fig.align='center', fig.cap= "Funnel plot depicting the correlation between metabolism and fitness as a function of precision (1 / SE). The dotted lines are the theoretical 95% sampling variance intervals - the interval with which we expect effect size estimates to fall within if only sampling variance drives differences in effects. Shaded regions represent the p-value of studies. The white region indicates studies where the p-value is between 0.1 and 1; dark gray where the p-value of studies is between 0.05 and 0.1 and the lighter gray regions where the p-value of studies is significant." }
+# Second method: directly give the range of x-axis and y-axis:
+metafor::funnel(x = data_lnRRf$yi, vi = data_lnRRf$vi, yaxis = "seinv",
+    digits = 3, level = c(0.1, 0.05, 0.01), shade = c("white", "gray55", "gray 75"),
+    xlab = "Correlation Coefficient (r)", xlim=c(-5,5), ylim=c(1,150),atransf = tanh, legend = TRUE, main = "Funnel plot")
+```
+
+#### 'ggplot' method:
+
+```{r, ggplotfunnel, fig.align='center', fig.cap="Funnel plot showing the precision of effects against their correlation"}
+# Use 'ggplot' to draw a simple funnel plot:
+ggplot(data_lnRRf, aes(y = 1/sqrt(vi), x = tanh(yi))) + geom_point() + geom_vline(aes(xintercept = 0)) + labs(y = "Precision (1/SE)", x = "Correlation Coefficient (r)") + theme_bw() +ggtitle("Funnel plot showing the precision of effects against correlation") +theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+# Explanation of the funnel plot: There is a noticeable blank space in the bottom right corner with positive correlations based on very small sample sizes that are generally moderate to small in magnitude going unpublished. The contour-enhanced funnel plot also tells us that these are studies that failed to find a significant correlation due to the small amount of data on both ends. And if the magnitude of correlation is large enough in the positive direction even with small sample sizes these can get published, but for the most part these are significant at 0.05.
+# Expect under a file-drawer situation (i.e., where researchers stash away poorer quality studies showing opposite effects in their desk drawers) that studies with low power (i.e., low precision, wide standard errors, and small sample sizes) and non-significant correlations will go unpublished. This should be particularly true for studies that show the opposite: positive correlations from studies with small sample sizes / high precision that are not significant. This is one factor that can drive what we call funnel asymmetry, showing a bunch of missing effect sizes in the bottom right corner of the funnel.
+```
+
+
+#### Fitting a Multilevel Meta-Regression model to Test and Correct for Publication bias:
+
+Predict if we fit a meta-regression model that uses sampling variance as a fixed effect / moderator, there will be a significant slope coefficient. That is because there is an unequal distribution of effect sizes on either side of the funnel plot and the mean effect size when the sampling variance is high gets shifted resulting in the slope being different from 0.
+
+```{r, egger, fig.align='center',fig.cap= "Plot of lnRR against sampling variance for Zr. A linear model was fit to the data."}
+# Use 'ggplot' to fit a multilevel meta-regression model:
+ggplot(data_lnRR, aes(y = yi, x = vi)) + 
+  geom_point() + 
+  geom_smooth(method = lm) + 
+  labs(y = "Correlation Coefficient", x = "Sampling Variance")+
+  theme_classic()+ggtitle("Sampling variance plot") +theme(plot.title = element_text(hjust = 0.5))
+# Because there are some very high values, so we can limit the range of x-axis.
+# Create the correct plot:
+ggplot(data_lnRR, aes(y = yi, x = vi)) + 
+  geom_point() + 
+  geom_smooth(method = lm) + 
+  labs(y = "Correlation Coefficient", x = "Sampling Variance")+ xlim(0,20)+
+  theme_classic()+ggtitle("Sampling variance plot") +theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+# Including sampling variance as moderator
+metareg_v <- rma.mv(yi ~ vi, vi, 
+                    random = list(~1|study, 
+                                  ~1|residual), 
+                    test = "t", dfs = "contain", 
+                    data = data_lnRR)
+summary(metareg_v)
+```
+
+```{r}
+# Explore how much variation about this model:
+r2 <- orchaRd::r2_ml(metareg_v)
+r2
+```
+
+```{r}
+# Sampling variance explains 2.8% of effect size variance. This is the marginal R2, which tell us how much variation the ‘fixed effects’ or moderators explain in the model. Conditional R2 tells us that the full model, that accounts for the both the fixed and random effects, explains 12.8% of variance in effect size.
+# There is evidence for publication bias because the slope estimate for vi is significant. We can see from this model that the adjusted lnRR (yi) when there is no uncertainty (i.e., the intercept) is 0.05 with a 95% confidence interval that overlaps zero (i.e., 95% CI = -0.3810 to 0.0817), that is, if no uncertainty around estimates exists, or we have a very high powered set of studies than we would expect the correlation to be, on average, 0.05.
+```
+
 
 
