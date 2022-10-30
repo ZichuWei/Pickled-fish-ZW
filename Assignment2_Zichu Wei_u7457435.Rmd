@@ -104,6 +104,19 @@ data_1
 ```
 
 
+### 2-3. Merge summary statistics with the metadata:
+
+#### 2. Metadata in 'clark_paper_data.csv' file:
+
+Merge the summary statistics generated from the above with the metadata in 'clark_paper_data.csv' file:
+
+```{r}
+# Use 'merge' function to merge 'data_1' with 'paper', let the sequence as 'paper' in the left.
+data_2 <- merge(paper,data_1)
+data_2
+```
+
+
 
 
 
