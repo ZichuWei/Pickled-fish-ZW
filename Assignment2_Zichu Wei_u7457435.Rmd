@@ -173,3 +173,86 @@ summary(data_v)
 ```
 
 
+### 6. Written paragraph:
+
+Written paragraph of the findings and what they mean which is supported with a figure. The paragraph should include:
+
+#### 1) Overall meta-analytic mean & Uncertainty in the overall meta-analytic mean:
+
+Correct presentation and interpretation of overall meta-analytic mean and measures of uncertainty around the mean estimate (e.g., 95% confidence intervals).
+
+```{r}
+# Overall meta-analytic mean:
+# From the model by extracting the intercept (labeled ‘estimate’ in the model output), we can know what the overall meta-analytic mean effect size across the studies actually is estimated to be. And the model is just an object that stores all the values for us.
+# We can extract the estimate using the 'coef' function, it is estimated to be -0.1497, which tells us that the mean 'yi' value is negative, and there is a rather weak overall association between physiology and dispersal / movement when we pool across all studies.
+```
+
+```{r}
+# Use transformation 'rma': convert the overall meta-analytic mean back to the correlation coefficient.
+predict(data_v, transf = "transf.rma")
+```
+
+```{r}
+# Uncertainty in the overall meta-analytic mean:
+# 95% confidence intervals are important to provide and they are stored in the data_v object as ci.lb and ci.up. We can extract the 95% confidence intervals in the table which range from -0.3810 to 0.0817, that is, 95% of the time we would expect the true mean to fall between 'yi' values of -0.3810 to 0.0817. And if we were to repeat the experiment many times, 95% of the confidence intervals constructed would contain the true meta-analytic mean.
+```
+ 
+```{r} 
+# Testing the hypothesis about whether the overall meta-analytic mean is different from 0.
+# We can also see that the null hypothesis that yi = 0 can be rejected because there is a significantly smaller estimate than a correlation of 0, which we can see from the p-value being < 0.05. To be more exact, the p-value is < 0.0001.
+```
+
+
+#### 2) Measures of heterogeneity in effect size estimates:
+
+Measures of heterogeneity in effect size estimates across studies (i.e., I2 and/or prediction intervals - see 'predict()' function in 'metafor')
+
+```{r, het, tab.cap = "Total effect size hetereogneity (Total), as well as the proportion of hetereogeneity in effects resulting from Study and Residual / Observational" }
+# I2 measurement:
+# Calculate I2:
+i2_vals <- orchaRd::i2_ml(data_v)
+
+# Clean up the names of the different I2 estimates and use some regular expressions to fix that. 'gsub()' function is used for replacement operations, change the original 'I2_' to blank. And use 'firstup()' to make the first letter of what is left 'type' capitalised.
+i2 <- tibble(type = firstup(gsub("I2_", "", names(i2_vals))), I2 = i2_vals)
+
+# Use 'flextable' to make a pretty table.
+flextable(i2) %>%
+    align(part = "header", align = "center") %>%
+    compose(part = "header", j = 1, value = as_paragraph(as_b("Type"))) %>%
+    compose(part = "header", j = 2, value = as_paragraph(as_b("I"), as_b(as_sup("2")),
+        as_b("(%)"))) %>% autofit(add_h = 0.5, part = c("body", "header"))
+```
+
+```{r}
+# According to the I2 of total, we can conclude that we have highly heterogeneous effect size data because sampling variation.
+# From the multi-level meta-analytic model we find that only 10% of the total variation in effect size estimates is the result of differences between studies.
+```
+
+
+```{r}
+# Prediction intervals measurement:
+predict(data_v)
+```
+
+```{r}
+# The prediction intervals are labelled 'pi.lb' (lower bound) and 'pi.ub' (upper bound), in this model, the prediction intervals are range from -4.4483 to 4.1490. It means 95% prediction intervals are wide. Effect sizes (yi) are expected to range from -4.4483 to 4.1490 95% of the time with repeated experiments, suggesting a lot of inconsistency between studies.
+```
+
+
+#### 3) Forest plot:
+
+Forest plot showing the mean estimate, 95% confidence interval, and prediction interval with clearly labelled axes, number of samples and studies plotted on figure.
+
+```{r rochard, fig.cap= "Orchard plot showing the correlation coefficients estimated in the intrcpt. k = the number of effect sizes and the number of studies are in brackets. The size of the effect is scaled by the precision of each effect size value, which is 1 / sqrt(vir)"}
+# Make an orchard plot using the model object, and the orchard plot improved from the forest plot.
+orchaRd::orchard_plot(data_v, mod = "1", group = "study", data = data_lnRR,
+    xlab = "Correlation Coefficient", angle = 45)
+```
+
+```{r}
+# The orchard plot as a variant on the classic forest plot, cultivated to the needs of meta‐analysts in ecology and evolution, showing the mean for correlation coefficients estimated between physiology and activity, dispersal and behavior. k = the number of effect sizes 757 (the number of studies = 91). The size of the effect is scaled by the precision of each effect size value, there are more numbers in the middle distribution, which is less accurate.
+```
+
+
+
+
