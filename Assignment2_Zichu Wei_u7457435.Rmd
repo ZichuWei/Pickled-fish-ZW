@@ -401,3 +401,45 @@ r2_time
 ```
 
 
+### 10. File-drawer biases:
+
+Formal meta-regression model that includes inverse sampling variance (i.e., 1vlnRR) to test for file-drawer biases.
+
+#### Fit the model:
+
+Create a model that accounts for both of these effects, and that accounts for the possible covariance between the two:
+
+```{r}
+# Including sampling variance and year as moderators to account for both:
+metareg_time1 <- rma.mv(yi ~ year_online + vi, vi, random = list(~1 | study, ~1 | residual),
+    test = "t", dfs = "contain", data = data_lnRR)
+summary(metareg_time1)
+```
+
+```{r}
+# Explore how much variation does time when results were published:
+r2_time_sv <- orchaRd::r2_ml(metareg_time1)
+r2_time_sv
+```
+
+```{r}
+# There is clear evidence, when accounting for the covariance between the two, for both file-drawer and time-lag biases in these data.
+```
+
+####  'Centre' the Year variable:
+
+```{r}
+# Add ‘centered on the mean’ Year and call it 'year_c'
+data_lnRR2 <- data_lnRR %>%
+    mutate(year_c = year_online - mean(year_online))
+```
+
+```{r}
+# Including sampling variance and mean centered year as moderators to account:
+metareg_time_c <- rma.mv(yi ~ year_c + vi, vi, random = list(~1 | study, ~1 |
+    residual), test = "t", dfs = "contain", data = data_lnRR2)
+summary(metareg_time_c)
+```
+
+
+
