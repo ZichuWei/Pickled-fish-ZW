@@ -349,4 +349,33 @@ r2
 ```
 
 
+### 8. Time-lag plot:
+
+Time-lag plot assessing how effect sizes may or may not have changed through time.
+
+```{r yearbubble,fig.align='center',fig.cap="Plot of r as a function of publication year (print). Points are scaled in relation to their precision (1/sqrt(vi). Small points indicate effects with low precision or high sampling varaince"}
+# Because there are two year datasets, actually the results are similar:
+# Year_print:
+ggplot(data_lnRR, aes(y = yi, x = year_print, size = 1/sqrt(vi))) + geom_point(alpha = 0.2) +
+    geom_smooth(method = lm, col = "red", show.legend = FALSE) + labs(x = "Publication Year",
+    y = "Correlation Coefficien(r)", size = "Precision (1/SE)") +
+    theme_classic()+ggtitle("Time-lag plot with publication year (print)") +theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r yearbubble,fig.align='center',fig.cap="Plot of r as a function of publication year (online). Points are scaled in relation to their precision (1/sqrt(vi). Small points indicate effects with low precision or high sampling varaince"}
+# Year_online:
+ggplot(data_lnRR, aes(y = yi, x = year_online, size = 1/sqrt(vi))) + geom_point(alpha = 0.2) +
+    geom_smooth(method = lm, col = "red", show.legend = FALSE) + labs(x = "Publication Year",
+    y = "Correlation Coefficien(r)", size = "Precision (1/SE)") +
+    theme_classic()+ggtitle("Time-lag plot with publication year (online)") +theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+# Explanation of these two Time-lag plots:
+# 1) There does appear to be a positive relationship with year.
+# 2) The earlier year studies have lower sampling variance (i.e., high precision), but actually the overall difference is small.
+# 3) These early studies appear to have a lower effect size compared with studies that are done in later years.
+```
+
+
 
