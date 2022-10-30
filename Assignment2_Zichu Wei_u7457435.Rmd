@@ -13,12 +13,45 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [My GitHub Repository](https://github.com/ZichuWei/Pickled-fish-ZW)
 
+
 ## Statistical Analysis and Interpretation
 
-```{r}
-# library the packages what we need to use for data analysis:
+### Load the necessary R Packages:
+
+```{r,results='hide'}
+# Data processing:
 library(tidyverse)
 library(readr)
 library(dplyr)
 library(plotrix)
 ```
+
+```{r}
+# Meta_analysis:
+library(pacman)
+pacman::p_load(metafor, orchaRd)
+p_load(bookdown, devtools, tidyverse, ggforce, GGally, flextable, latex2exp, png,
+    magick, metafor, MASS, emmeans, R.rsp)
+devtools::install_github("daniel1noble/orchaRd", force = TRUE)
+library(orchaRd)
+```
+
+```{r}
+# Draw the figures:
+library(ggplot2)
+```
+
+
+### Read the files:
+
+```{r}
+# These analyses need these three files.
+data <- read.csv("OA_activitydat_20190302_BIOL3207.csv")
+paper <- read.csv("clark_paper_data.csv")
+meta <- read.csv("ocean_meta_data.csv")
+```
+
+
+
+
+
